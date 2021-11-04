@@ -1,0 +1,2 @@
+This    sentence      has far   too   many    spaces
+                   f    
