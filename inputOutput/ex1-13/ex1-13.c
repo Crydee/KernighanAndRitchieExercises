@@ -6,7 +6,7 @@
 main() {
 
 int lenfreqs[MAXWORDLEN + 1]; /* This array will store the the frequencies with which words of lengths 1, ..., MAXWORDLEN, MAXWORDLEN+ appear */
-int c, hit_EOF, l, wordlen;
+int c, col, highest_freq, hit_EOF, l, row, wordlen;
 
 hit_EOF = 0;
 wordlen = 0;
@@ -24,6 +24,7 @@ while (hit_EOF == 0) {
           }
     else if((wordlen != 0) && (wordlen >= MAXWORDLEN)) {
         ++lenfreqs[MAXWORDLEN];
+        wordlen = 0;
     }
     if (c == EOF) {
           hit_EOF = 1;
@@ -32,7 +33,28 @@ while (hit_EOF == 0) {
   else
       ++wordlen;
 }
-for( l = 0; l <= MAXWORDLEN; ++l)
+
+highest_freq = 0;
+for(l=0; l<=MAXWORDLEN; ++l) {
+  if(lenfreqs[l] > highest_freq)
+    highest_freq = lenfreqs[l];
+}
+printf("The highest frequency is: %d\n", highest_freq);
+
+for( row=0; row<highest_freq; ++row) {
+  printf("%3d", highest_freq - row);
+  for( col=0; col<MAXWORDLEN + 1; ++col) {
+    if( lenfreqs[col] >= (highest_freq - row))
+      printf("*");      
+    else
+      printf(" ");
+  }
+  printf("\n");
+}
+
+for( l=0; l<=MAXWORDLEN; ++l)
     printf(" %d", lenfreqs[l]);
-    putchar('\n');
+
+putchar('\n');
+
 }
