@@ -13,6 +13,7 @@ int main() {
           reverses(s);
           printf("%s", s);
         }
+        printf("\n"); /* Print a space once the program has finished */
         
 }
 
