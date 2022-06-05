@@ -1,9 +1,2 @@
-The quick brown     fox
-jumps over      The
-lazy    dog
-
-
-
-
-
-foo         bar
+The quick brown fox jumps over the laxy dog.  
+ 
