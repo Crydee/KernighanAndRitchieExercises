@@ -1,5 +1,5 @@
  faaf
           There is a boody
-faaaaaad                  d
+  faaaaaad                  d
 faaf
-ERROR: encountered a sequence of spaces or tabs longer than 1000 characters
+ERROR: encountered a sequence of spaces and/or tabs longer than 1000 characters
