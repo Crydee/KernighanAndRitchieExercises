@@ -36,17 +36,8 @@ main()
                         if (got_non_whitespace == YES) 
                         {
                                 /* We've reached the end of the line, so discard any preceding whitespace and print '\n' */
-                                zero_arr(cons_spaces_tabs, i + 1);
                                 putchar(c);
                                 got_non_whitespace = NO;
-                                i = 0;
-                        }
-                        else
-                        {
-                                /* We've encountered a line with nothing but white-space, so clear the array of stored
-                                * whitespace and prepare to start a new line. */
-                               zero_arr(cons_spaces_tabs, i + 1);
-                               i = 0;
                         }
                         /* Whether or not we encountered any non-whitespace chars in the line, we always want to zero the array at the end of the line */
                         zero_arr(cons_spaces_tabs, i + 1);
