@@ -31,7 +31,7 @@ int get_line(char s[],int lim)
         return i;
 }
 
-/* Reverse an array of characters */
+/* Reverse a null-terminated array of characters */
 void reverses(char s[]) {
   int swp, idx, last_idx;
 
@@ -40,10 +40,16 @@ void reverses(char s[]) {
           ++last_idx;
   --last_idx; /* At this point, last_idx is the index of the character before the first '\0' in the input array */
 
-
-  for( idx = 0; idx < last_idx - idx; ++idx) {
+        /* Now that we know the index of the final element (let's say n) in the array, we want to swap the elements */
+        /* in turn, swapping the k'th elt (index k-1) with the n-k'th elt (index (n-1)-k).  We take advantage of the*/
+        /* fact that integer division in C truncates in the for loop's condition.*/
+  for( idx = 0; idx < ((last_idx + 1) / 2); ++idx) {
     swp = s[idx];
     s[idx] = s[last_idx - idx];
     s[last_idx - idx] = swp;
   }
+  /* The function returns no value as the array that is passed as*/
+  /* an argument is directly mutated as a consequence of the fact*/
+  /* that in C arrays are passed as args. by reference, not by*/
+  /* value. */
 }
