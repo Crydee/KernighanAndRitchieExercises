@@ -1,1 +1,2 @@
-The quick   brown   fox jumps   over    the lazy    dog.
+	i	i	i	i	i	i	i	i	i	i
+	the	quick	brown	fox	jumps	over	the	lazy	dog
