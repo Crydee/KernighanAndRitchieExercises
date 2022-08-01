@@ -10,15 +10,18 @@ void null_arr(char arr[], int length);
 int main()
 {
   int c;
+  char letter;
   int num_cons_blanks; /* The number of consecutive blanks that we have encountered since last printing a char. */
-  int position_mod_tab; /* Position of the last printed char in the current line, past the last tab-space. */
+  int position_mod_tab; /* Position, past the last tab-stop of the next character to be printed in the line. */
   char blanks[STOPLEN + 1]; /* Array to store the blanks that we encounter, null terminated.*/
 
   num_cons_blanks = position_mod_tab = 0;
+  null_arr(blanks, STOPLEN + 1);
 
   while ((c = getchar()) != EOF)
   {
-    if (c == " ")
+    letter = c;
+    if (c == ' ')
     {
         blanks[num_cons_blanks] = c;
         num_cons_blanks++;
@@ -27,13 +30,31 @@ int main()
             /* The blanks in our array would take us to the next tab-stop, so print out a tab. */
             printf("\t");
             /* Zero our position relative to the last tab stop, the idx of the arr, and the arr's contents. */
-            null_arr(blanks, num_cons_blanks + 1);
+            null_arr(blanks, num_cons_blanks);
             position_mod_tab = num_cons_blanks = 0;
         }
     }
     else 
     {
-        /*Print out any blanks that we may have and then print out the character, whilst keeping track of position_mod_tab.  Zero the idx of the arr and it's elts (if spaces printed)*/
+        /* We print out the preceding blanks and then the non-blank char. */
+        if (num_cons_blanks != 0)
+        {
+          /* Print out the preceding blanks. */
+          printf("%s", blanks);
+          position_mod_tab = ((position_mod_tab + num_cons_blanks) % STOPLEN);
+          null_arr(blanks, num_cons_blanks);
+          num_cons_blanks = 0;
+        }
+        
+        printf("%c", c);
+        if ((c == '\n') || (c == '\t'))
+        {
+          position_mod_tab = 0;
+        }
+        else
+        {
+          position_mod_tab = ((position_mod_tab + 1) % STOPLEN);
+        }        
     }
   }
 }
