@@ -47,13 +47,15 @@ int fold_before_lim(char line[], int lim)
 
             }
         }
+        /* The inner loop has finished, so we want to print the elements in (printed_to, print_to] and then update printed_to. */
+        for (ii = (printed_to + 1); ii <= print_to; ii++)
+        {
+            printf("%c", line[ii]);
+        }
+        printf("\n");
+        printed_to = print_to;
     }
-    /* The inner loop has finished, so we want to print the elements in (printed_to, print_to] and then update printed_to. */
-    for (ii = (printed_to + 1); ii <= print_to; ii++)
-    {
-        printf("%c", line[ii]);
-    }
-    printed_to = print_to;
+    return lines_printed;
 }
 
 int get_line(char line[], int lim)
