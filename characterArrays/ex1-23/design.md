@@ -1,6 +1,6 @@
 # Requirement:
 
->Write a program to remove all comments from a C program.  Don't forget to handle quoted strings and character
+> Write a program to remove all comments from a C program.  Don't forget to handle quoted strings and character
 constants properly.  C comments do not nest.
 
 
@@ -21,3 +21,5 @@ with character constants, so don't stop copying even if we encounter `/*`. *Is t
 copying over characters since you can't put a comment in a quoted string. *I think...*
     - so, we'll need to keep track of whether or not we are in a quoted string.
     - we should ignore all special characters in a quoted string (such as `'` which we discussed a moment ago).
+
+We'll want a function that takes an array, and the length of the array (or number of elts before the null char that terminates the arr) and returns an arr without any comments.  We'll need variables to check if we're in a character const or in a quoted string so that we know if we should ignore `/*`'s.
