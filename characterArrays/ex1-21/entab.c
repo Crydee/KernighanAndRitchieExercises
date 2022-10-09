@@ -10,7 +10,6 @@ void null_arr(char arr[], int length);
 int main()
 {
   int c;
-  char letter;
   int num_cons_blanks; /* The number of consecutive blanks that we have encountered since last printing a char. */
   int position_mod_tab; /* Position, past the last tab-stop of the next character to be printed in the line. */
   char blanks[STOPLEN + 1]; /* Array to store the blanks that we encounter, null terminated.*/
@@ -20,7 +19,6 @@ int main()
 
   while ((c = getchar()) != EOF)
   {
-    letter = c;
     if (c == ' ')
     {
         blanks[num_cons_blanks] = c;
