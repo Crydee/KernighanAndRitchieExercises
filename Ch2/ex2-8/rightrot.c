@@ -1,5 +1,6 @@
+/* Write a function rightrot(x,n) that returns the value of the integer x rightrotd to the right by n bit positions. */
 #include <stdio.h>
-unsigned rotate(unsigned x, int n);
+unsigned rightrot(unsigned x, int n);
 void print_bits(unsigned x);
 
 main() {
@@ -10,11 +11,11 @@ main() {
   print_bits(n);
 
   printf("Rotating by %d bits gives: ", k);
-  n = rotate(n, k);
+  n = rightrot(n, k);
   print_bits(n);
 }
 
-unsigned rotate(unsigned x, int n) {
+unsigned rightrot(unsigned x, int n) {
   int i;
 
   for (i = 0; i < n; i++) {
