@@ -3,7 +3,7 @@ unsigned rotate(unsigned x, int n);
 void print_bits(unsigned x);
 
 main() {
-  unsigned n = 0177, k = 1;
+  unsigned n = 100000000, k = 5;
 
   printf("n is %o ", n);
   printf("with bit pattern: \n");
@@ -18,8 +18,10 @@ unsigned rotate(unsigned x, int n) {
   int i;
 
   for (i = 0; i < n; i++) {
-    if ((x & ~(~0 << 1)) == 1)
-      x = (x >> 1) | ~(~0 >> 1);
+    if ((x & ~((unsigned)~0 << 1)) == 1) {
+      /* We cast ~0 to an unsigned int to make sure that the vacated bits are filled with 0s rather than 1s. */
+      x = (x >> 1) | ~((unsigned)~0 >> 1);
+    }
     else 
       x = x >> 1;
   }
