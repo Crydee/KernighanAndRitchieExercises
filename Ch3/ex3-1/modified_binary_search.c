@@ -14,7 +14,9 @@ main() {
   for (ii = 0; ii < 10; ii++)
     printf("%d%c ", test_arr[ii], ii == 9? ' ': ',');
   printf("\n");
-  
+
+  printf("The index of the value %d is %d\n", 4, binsearch(4, test_arr, 10));
+  printf("The index of the value %d is %d\n", 10, mod_binsearch(10, test_arr, 10));
 }
 
 /* find x in v[0] <= v[1] <= ... <= v[n-1] */
