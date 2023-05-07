@@ -7,7 +7,7 @@ int binsearch(int x, int v[], int n);
 int mod_binsearch(int x, int v[], int n);
 
 main() {
-  int ii, test_arr[] = {0,1,2,3,3,4,5,6,7,8,9};
+  int ii, test_arr[] = {0,1,2,3,3,4,5,6,7,8,9}, small_arr[] = {0,1,2};
 
   printf("the test array is: ");
 
@@ -16,8 +16,11 @@ main() {
   printf("\n");
 
   for (ii = 0; ii < 10; ii++) {
-    printf("The index of the value %d is %d\n", ii, mod_binsearch(ii, test_arr, 10));
+    printf("The index of the value %d is %d\n", ii, mod_binsearch(ii, test_arr, 11));
   }
+
+  for (ii = 0; ii < 3; ii++)
+    printf("The index of the value %d is %d\n", ii, mod_binsearch(ii, small_arr, 3));
 
 }
 
