@@ -28,8 +28,8 @@ main() {
     mod_binsearch(test_arr[ii], test_arr, TEST_ARR_SIZE);
     //printf("the value %d is at index %d\n", test_arr[ii], mod_binsearch(test_arr[ii], test_arr, TEST_ARR_SIZE));
   }
-  time_diff = clock() - start_time;
-  printf("The modified binary search took %f clocks to run %d times.\n", time_diff, TEST_ARR_SIZE);
+  time_diff = ((float) clock() - start_time) / CLOCKS_PER_SEC;
+  printf("The modified binary search took %f seconds to run %d times.\n", time_diff, TEST_ARR_SIZE);
 
 // Run the book algo TEST_ARR_SIZE times
   start_time = clock();
@@ -38,8 +38,8 @@ main() {
     binsearch(test_arr[ii], test_arr, TEST_ARR_SIZE);
     //printf("the value %d is at index %d\n", test_arr[ii], mod_binsearch(test_arr[ii], test_arr, TEST_ARR_SIZE));
   }
-  time_diff = clock() - start_time;
-  printf("The book binary search took %f clocks to run %d times.\n", time_diff, TEST_ARR_SIZE);
+  time_diff = ((float) clock() - start_time) / CLOCKS_PER_SEC;
+  printf("The book binary search took %f seconds to run %d times.\n", time_diff, TEST_ARR_SIZE);
 
 }
 
