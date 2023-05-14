@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define TEST_ARR_SIZE 10
+#define TEST_ARR_SIZE 2000000
 
 int binsearch(int x, int v[], int n);
 int mod_binsearch(int x, int v[], int n);
@@ -13,25 +13,33 @@ int rand_int(int lower, int upper);
 
 main() {
   int ii, test_arr[TEST_ARR_SIZE];
-  time_t start_time, end_time;
+  float time_diff;
+  clock_t start_time;
 
   /* Construct a test array with weakly monotonically increasing values. */
   for (ii = 0; ii < TEST_ARR_SIZE; ii++)
     test_arr[ii] = (ii == 0) ? 0: rand_int(test_arr[ii - 1], test_arr[ii - 1] + 3);
 
-  printf("the test array is: ");
-  for (ii = 0; ii < TEST_ARR_SIZE; ii++)
-    printf("%d%c ", test_arr[ii], ii == (TEST_ARR_SIZE - 1) ? ' ': ',');
-  printf("\n");
 
+// Run the modified binary search algo TEST_ARR_SIZE times
+  start_time = clock();
   /* For each element in the array, execute the binary search routine to find it. */
-  for (ii = 0; ii < TEST_ARR_SIZE; ii++)
-    printf("the value %d is at index %d\n", test_arr[ii], mod_binsearch(test_arr[ii], test_arr, TEST_ARR_SIZE));
-/*  for (ii = 0; ii < 10; ii++) {
-/*    printf("The index of the value %d is %d\n", ii, mod_binsearch(ii, test_arr, 10));
-/*  }
-/*  printf("The index of the value %d is %d\n", 4, binsearch(4, test_arr, 10));
-/*  printf("The index of the value %d is %d\n", 4, mod_binsearch(4, test_arr, 10)); */
+  for (ii = 0; ii < TEST_ARR_SIZE; ii++) {
+    mod_binsearch(test_arr[ii], test_arr, TEST_ARR_SIZE);
+    //printf("the value %d is at index %d\n", test_arr[ii], mod_binsearch(test_arr[ii], test_arr, TEST_ARR_SIZE));
+  }
+  time_diff = clock() - start_time;
+  printf("The modified binary search took %f clocks to run %d times.\n", time_diff, TEST_ARR_SIZE);
+
+// Run the book algo TEST_ARR_SIZE times
+  start_time = clock();
+  /* For each element in the array, execute the binary search routine to find it. */
+  for (ii = 0; ii < TEST_ARR_SIZE; ii++) {
+    binsearch(test_arr[ii], test_arr, TEST_ARR_SIZE);
+    //printf("the value %d is at index %d\n", test_arr[ii], mod_binsearch(test_arr[ii], test_arr, TEST_ARR_SIZE));
+  }
+  time_diff = clock() - start_time;
+  printf("The book binary search took %f clocks to run %d times.\n", time_diff, TEST_ARR_SIZE);
 
 }
 
@@ -47,7 +55,7 @@ int binsearch(int x, int v[], int n) {
       high = mid - 1;
     else if (x > v[mid])
       low = mid + 1;
-    else /* found a match */ 
+    else /* found a match */
       return mid;
   }
   return -1; /* no match */
