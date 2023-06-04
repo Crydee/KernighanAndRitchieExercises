@@ -8,16 +8,18 @@ int unescape(char s[], char t[]);
 
 #define S_LENGTH 10000
 int main() {
-  char s[S_LENGTH], t[] = "There's \vsome odd\t stuff \ in ' this \" ar\fray?";
+  char s[S_LENGTH], t[] = "There's \nsome odd\n stuff \ in ' this \n ar\nray?", w[S_LENGTH];
 
   printf("The unescaped test arr is:%s\n", t);
   escape(s, t);
   printf("The escaped output arr is:%s\n", s);
+  unescape(w, s);
+  printf("Calling unescape of the output gives:%s\n", t);
 }
 
 /*We will assume that there's room for the converted string in s*/
 int escape(char s[], char t[]) {
-  int i, j, c, count;
+  int i, j, c, count = 0;
   
   for (i = j = 0; (c = t[i]) != '\0'; i++) {
     switch (c) {
@@ -69,3 +71,29 @@ int escape(char s[], char t[]) {
   s[j] = '\0';
   return count;
 }
+/* This is easier to write succinctly, as we just need to look out for un-escaped backslashes and print '/<the next char>*/
+int unescape(char s[], char t[]) {
+
+  int i, j, c, count = 0, in_esc_seq = 0;
+
+  for(i = j = 0; (c = t[i]) != '\0'; i++) {
+    if (in_esc_seq) {
+      switch (c) {
+        case 'n':
+          s[j++] = '\n';
+          count++;
+          break;
+      }
+      in_esc_seq = 0;
+    }
+    else if (c == '\\') {
+      in_esc_seq = 1;
+    }
+    else {
+      s[j++] = c;
+    }
+  }
+  s[j++] = '\0';
+  return count;
+}
+
