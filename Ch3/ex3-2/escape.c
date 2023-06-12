@@ -83,7 +83,23 @@ int unescape(char s[], char t[]) {
           s[j++] = '\n';
           count++;
           break;
-      }
+        case 't':
+          s[j++] = '\t';
+          count++;
+          break;
+        case 'f':
+          s[j++] = '\f';
+          count++;
+          break;
+        case 'v':
+          s[j++] = '\v';
+          count++;
+          break;
+        case '\\':
+          s[j++] = '\\';
+          count++;
+          break;
+ }
       in_esc_seq = 0;
     }
     else if (c == '\\') {
