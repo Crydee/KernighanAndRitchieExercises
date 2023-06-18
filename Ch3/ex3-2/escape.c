@@ -19,10 +19,10 @@ int main() {
 
 /*We will assume that there's room for the converted string in s*/
 int escape(char s[], char t[]) {
-  int i, j, c, count = 0;
+  int i, j, count = 0;
   
-  for (i = j = 0; (c = t[i]) != '\0'; i++) {
-    switch (c) {
+  for (i = j = 0; t[i] != '\0'; i++) {
+    switch (t[i]) {
       case '\t': 
         s[j++] = '\\';
         s[j++] = 't';
@@ -64,7 +64,7 @@ int escape(char s[], char t[]) {
         count++;
         break;
       default:
-        s[j++] = c;
+        s[j++] = t[i];
         break;
    }
   } 
@@ -74,42 +74,47 @@ int escape(char s[], char t[]) {
 /* This is easier to write succinctly, as we just need to look out for un-escaped backslashes and print '/<the next char>*/
 int unescape(char s[], char t[]) {
 
-  int i, j, c, count = 0, in_esc_seq = 0;
+  int i, j, count = 0 ;
 
-  for(i = j = 0; (c = t[i]) != '\0'; i++) {
-    if (in_esc_seq) {
-      switch (c) {
-        case 'n':
-          s[j++] = '\n';
-          count++;
-          break;
-        case 't':
-          s[j++] = '\t';
-          count++;
-          break;
-        case 'f':
-          s[j++] = '\f';
-          count++;
-          break;
-        case 'v':
-          s[j++] = '\v';
-          count++;
-          break;
-        case '\\':
-          s[j++] = '\\';
-          count++;
-          break;
- }
-      in_esc_seq = 0;
-    }
-    else if (c == '\\') {
-      in_esc_seq = 1;
-    }
-    else {
-      s[j++] = c;
+  for(i = j = 0;  t[i] != '\0'; i++, j++, count++) {
+
+    switch (t[i]){
+
+      case '\\':
+        switch (t[++i]) {
+          case 'n':
+            s[j] = '\n';
+            count++;
+            break;
+          case 't':
+            s[j] = '\t';
+            count++;
+            break;
+          case 'f':
+            s[j] = '\f';
+            count++;
+            break;
+          case 'v':
+            s[j] = '\v';
+            count++;
+            break;
+          case '\\':
+            s[j] = '\\';
+            count++;
+            break;
+          default:
+            s[j] = '\\';
+            s[++j] = t[i];
+            break;
+        }
+        break;
+
+      default:
+        s[j] = t[i];
+        break;
     }
   }
-  s[j++] = '\0';
+  s[j] = t[i]; /*Null terminate the array*/
   return count;
 }
 
