@@ -10,7 +10,19 @@ void mod_itoa(int n, char s[]);
 
 #include <stdio.h>
 
-void mod_itoa(int n, char s[]) {}
+void mod_itoa(int n, char s[]) {
+  int i, sign;
+
+  if ((sign = n) > 0) /* record sign */
+    n = -n;           /* make n -ve */
+  i = 0;
+  do {
+    s[i++] = '0' - (n % 10); /* get next digit */
+  } while ((n /= 10) < 0)
+  if (sign < 0)
+    s[i++] = '-';
+  reverse(s);
+}
 
 void itoa(int n, char s[], int width) {
   int i, sign;
