@@ -9,7 +9,8 @@ double extended_atof(char s[]);
 double exponentiate(int base, int power);
 
 int main() {
-  char input[] = "1234567.89E7";
+  char input[] = "1234567.89e7";
+  double x;
 
   printf("The value of atof called on %s is %f\n" , input, extended_atof(input));
   printf("the difference between %f and %f is %f\n", 12345678900000.0, extended_atof(input), 12345678900000.0 - extended_atof(input));
@@ -43,7 +44,8 @@ double extended_atof(char s[]) {
     exponent = exponentiate(10, exponent);
     exponent = (exp_sign == -1) ? 1 / exponent : exponent;
   }
-  return (sign * val / power) * exponent;
+  printf("the result of sign * val / power is %f\n", sign * val /power);
+  return ( sign * val / power) * exponent;
 }
 
 double atof(char s[]) {
