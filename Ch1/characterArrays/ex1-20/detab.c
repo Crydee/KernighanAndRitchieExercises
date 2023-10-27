@@ -22,8 +22,15 @@ int main() {
             position = 0;        
         }
         else {
+            if (c == '\n')
+            {
+                position = 0;
+            }
+            else
+            {
+                position = (position + 1) % STOPLEN;                 
+            }
             printf("%c", c);
-            position = (position + 1) % STOPLEN;            
         }
     }
     return 0;
