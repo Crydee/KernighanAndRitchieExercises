@@ -20,6 +20,7 @@ int main(void)
 {
   int type;
   double op2;
+  double top_elt;
   char s[MAXOP];
 
   while((type = getop(s)) != EOF)
@@ -57,8 +58,14 @@ int main(void)
         show_top();
         break;
       case 'd':
+        top_elt = pop();
+        push(top_elt);
+        push(top_elt);
+        break;
+      case 's':
+        top_elt = pop();
         op2 = pop();
-        push(op2);
+        push(top_elt);
         push(op2);
         break;
       case '\n':
