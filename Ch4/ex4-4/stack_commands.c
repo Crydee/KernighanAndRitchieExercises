@@ -1,7 +1,8 @@
 /* this program forms the basis on which exercises 4-3 through 4-10 build */
 /* Given the basic framework, it's straightforward to extend the calculator.  Add the modulus (%) operator and
  * provisions for negative numbers. */
-
+/* To Do: currenly whenever a user hits enter after any input the top of the stack is popped.  We don't want this when we're using the stack commands
+ * that we've just added. */
 #include <stdio.h>
 #include <stdlib.h> /* for atof() - in K&R, math.h is referenced - this is an anachronism */
 #include <math.h>
