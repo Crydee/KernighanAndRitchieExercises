@@ -136,10 +136,11 @@ int handle_cmd(int op) {
    }
   return no_pop;
 }
-/* shobreak;          w_top: print the top element of the stack without popping it */
+/* show_top: print the top element of the stack without popping it */
 void show_top(void) {
-  if(sp > 0)
-    printf("Top element of stack: %f\n", val[sp - 1]);
+  if(sp)
+    for(int i = sp - 1; i >= 0; i--)
+      printf("%f\n", val[i]);
   else
     printf("Cannot print top element, stack is empty\n");
 }
