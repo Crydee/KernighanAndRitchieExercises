@@ -13,6 +13,7 @@ int getop(char []);
 void push(double);
 double pop(void);
 void show_top(void);
+void clear_stack();
 
 /* reverse Polish calculator */
 
@@ -68,6 +69,9 @@ int main(void)
         push(top_elt);
         push(op2);
         break;
+      case 'z':
+        clear_stack();
+        break;
       case '\n':
         printf("\t%.8g\n", pop());
         break;
@@ -112,6 +116,12 @@ void show_top(void) {
     printf("Top element of stack: %f\n", val[sp - 1]);
   else
     printf("Cannot print top element, stack is empty\n");
+}
+
+/* clear_stack: clear the stack. */
+void clear_stack(void) {
+  printf("Clearing stack, %d elements cleared.\n", sp);
+  sp = 0;
 }
 
 #include <ctype.h>
