@@ -11,8 +11,9 @@
 #define NUMBER '0' /* signal that a number was found */
 
 int getop(char []);
-void push(double);
+int handle_cmd(int);
 double pop(void);
+void push(double);
 void show_top(void);
 void clear_stack();
 
@@ -20,15 +21,17 @@ void clear_stack();
 
 int main(void)
 {
-  int type;
+  int type, no_pop = 0;
   double op2;
-  double top_elt;
   char s[MAXOP];
 
   while((type = getop(s)) != EOF)
   {
     switch(type)
     {
+      case '#': case '?': case '@': case '!':
+        no_pop = handle_cmd(type);
+        break;
       case NUMBER:
         push(atof(s));
         break;
@@ -56,25 +59,12 @@ int main(void)
         else
           printf("error: zero divisor\n");
         break;
-      case 'p':
-        show_top();
-        break;
-      case 'd':
-        top_elt = pop();
-        push(top_elt);
-        push(top_elt);
-        break;
-      case 's':
-        top_elt = pop();
-        op2 = pop();
-        push(top_elt);
-        push(op2);
-        break;
-      case 'z':
-        clear_stack();
-        break;
       case '\n':
-        printf("\t%.8g\n", pop());
+        /* We don't want to pop the top of the stack when we just want to display the output of a command. */
+        if(!no_pop)
+          printf("\t%.8g\n", pop());
+        else
+          no_pop = 0;
         break;
       default:
         printf("error: unknown command %s\n", s);
@@ -111,7 +101,42 @@ double pop(void)
   }
 }
 
-/* show_top: print the top element of the stack without popping it */
+/* handle_cmd: Handle commands that manipulate or display the stack. */
+int handle_cmd(int op) {
+  int no_pop = 0; /* Whether or not to pop the top value of the stack on the next press of the enter key.*/
+  double top_elt, second_elt;
+  switch (op) {
+    case '#':
+      /* Duplicate the top element of the stack.*/
+      no_pop = 1;
+      push(top_elt = pop());
+      push(top_elt);
+      break;
+    case '?':
+      /* Display the top element of the stack, without popping it.*/
+      no_pop = 1;
+      show_top();
+      break;
+    case '@':
+      /* Swap the top two elements of the stack, without popping them. */
+      no_pop = 1;
+      top_elt = pop();
+      second_elt = pop();
+      push(top_elt);
+      push(second_elt);
+      break;
+    case '!':
+      /* Clear the stack */
+      clear_stack();
+      break;
+    default:
+      /* We should only end up here if we read a character we don't understand.*/
+      no_pop = 1;
+      printf("%c is not a valid command", op);
+   }
+  return no_pop;
+}
+/* shobreak;          w_top: print the top element of the stack without popping it */
 void show_top(void) {
   if(sp > 0)
     printf("Top element of stack: %f\n", val[sp - 1]);
