@@ -142,6 +142,8 @@ int handle_string(char * stack) {
     else
       printf("We need at least one value on the stack to call exp\n");
   }
+  else
+    printf("The string provided, %s, didn't match any supported function\n", stack);
   return 0;
 }
 
@@ -205,6 +207,7 @@ int getop(char s[])
 {
   int i, c;
 
+  /* Skip whitespace.*/
   while((s[0] = c = getch()) == ' ' || c == '\t')
     ;
 
