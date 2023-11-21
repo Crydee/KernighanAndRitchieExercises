@@ -9,10 +9,12 @@
 #define MAXOP 100 /* max size of operand or operator */
 #define NUMBER '0' /* signal that a number was found */
 #define STRING -10 /* signal that a string was found */
+#define VARIABLE -5 /* signal that a variable name was found */
 
 int getop(char []);
 int handle_cmd(int);
 int handle_string(char *);
+int handle_variable(char *);
 double pop(void);
 void push(double);
 void show_top(void);
@@ -22,9 +24,14 @@ void clear_stack();
 
 int main(void)
 {
-  int type, no_pop = 0;
+  int type, last_arg_was_variable = 0,no_pop = 0;
   double op2;
   char s[MAXOP];
+  double variables[26];
+
+  /* Zero the variables array so we can see when they have been set. CRD note: What if they've been set to zero?*/
+  for (int i = 0; i < 26; i++)
+    variables[i] = 0.0;
 
   while((type = getop(s)) != EOF)
   {
@@ -32,6 +39,12 @@ int main(void)
     {
       case '#': case '?': case '@': case '!':
         no_pop = handle_cmd(type);
+        break;
+      case VARIABLE:
+        /* Record that we've just seen a variable.*/
+        last_arg_was_variable = (s[0] - 'A');
+        /* Push the current value of the variable to the stack.*/
+        push(variables[s[0] - 'A']);
         break;
       case NUMBER:
         push(atof(s));
@@ -63,6 +76,16 @@ int main(void)
         else
           printf("error: zero divisor\n");
         break;
+      case '=':
+        if (('A' < last_arg_was_variable) && ('Z' + 1 >= last_arg_was_variable)) {
+          /* The last arg was a variable, so we want to pop it's value from the stack and assign the value
+           * before to the variable identifier.*/
+          pop();
+          push(variables[--last_arg_was_variable] = pop());
+        }
+        else
+          printf("Error: can't assign to an invalid variable identifier.");
+        break;
       case '\n':
         /* We don't want to pop the top of the stack when we just want to display the output of a command. */
         if(!no_pop)
@@ -74,6 +97,13 @@ int main(void)
         printf("error: unknown command %s\n", s);
         break;
     }
+    /* This construction allows us to remember if the previous argument 
+     * was a variable identifier, but means that we forget after that*/
+    /* CRD: this is bugged now that we set last_arg_was_variable to 's[0] - 'A'.  Re-think.*/
+    if (last_arg_was_variable == 1)
+      last_arg_was_variable++;
+    else
+      last_arg_was_variable = 0;
   }
 
   return 0;
@@ -182,6 +212,13 @@ int handle_cmd(int op) {
    }
   return no_pop;
 }
+
+/* handle_variable: handle the input of a variable name.*/
+int handle_variable(char * s) {
+  /* Push the value of the variable to the stack.*/
+
+}
+
 /* show_top: print the top element of the stack without popping it */
 void show_top(void) {
   if(sp)
@@ -214,7 +251,13 @@ int getop(char s[])
   s[1] = '\0';
   i = 0;
   if(isalpha(c)) { /* If we get an alphabetic character then keep getting more until we get something else.*/
-    while(isalpha(s[++i] = c = getch()))
+    /* We treat any upper-case character as a variable name, so if we read one in then we know we don't nead to read
+     * any further.*/
+    if(isupper(c))
+        return VARIABLE;
+    /* We check that we are only reading in lower case characters, since we're treating upper-case characters
+     * as variable names.*/
+    while(islower(s[++i] = c = getch()))
       ;
     s[i] = '\0';
     if(c != EOF)
