@@ -24,7 +24,7 @@ void clear_stack();
 
 int main(void)
 {
-  int type, last_arg_was_variable = 0,no_pop = 0;
+  int type, last_type = 0,no_pop = 0;
   double op2;
   char s[MAXOP];
   double variables[26];
@@ -39,12 +39,6 @@ int main(void)
     {
       case '#': case '?': case '@': case '!':
         no_pop = handle_cmd(type);
-        break;
-      case VARIABLE:
-        /* Record that we've just seen a variable.*/
-        last_arg_was_variable = (s[0] - 'A');
-        /* Push the current value of the variable to the stack.*/
-        push(variables[s[0] - 'A']);
         break;
       case NUMBER:
         push(atof(s));
@@ -77,11 +71,11 @@ int main(void)
           printf("error: zero divisor\n");
         break;
       case '=':
-        if (('A' < last_arg_was_variable) && ('Z' + 1 >= last_arg_was_variable)) {
+        if (('A' <= last_type) && ('Z' >= last_type)) {
           /* The last arg was a variable, so we want to pop it's value from the stack and assign the value
            * before to the variable identifier.*/
           pop();
-          push(variables[--last_arg_was_variable] = pop());
+          push(variables[last_type] = pop());
         }
         else
           printf("Error: can't assign to an invalid variable identifier.");
@@ -94,18 +88,15 @@ int main(void)
           no_pop = 0;
         break;
       default:
-        printf("error: unknown command %s\n", s);
+        if (('A' <= type) && ('Z' >= type)) {
+          push(variables[type]);
+        }
+        else
+          printf("error: unknown command %s\n", s);
         break;
     }
-    /* This construction allows us to remember if the previous argument 
-     * was a variable identifier, but means that we forget after that*/
-    /* CRD: this is bugged now that we set last_arg_was_variable to 's[0] - 'A'.  Re-think.*/
-    if (last_arg_was_variable == 1)
-      last_arg_was_variable++;
-    else
-      last_arg_was_variable = 0;
+    last_type = type;
   }
-
   return 0;
 }
 
@@ -254,7 +245,8 @@ int getop(char s[])
     /* We treat any upper-case character as a variable name, so if we read one in then we know we don't nead to read
      * any further.*/
     if(isupper(c))
-        return VARIABLE;
+      /* If we get an upper-case character we assume it's a variable name and return the value of it's character const.*/
+        return c;
     /* We check that we are only reading in lower case characters, since we're treating upper-case characters
      * as variable names.*/
     while(islower(s[++i] = c = getch()))
