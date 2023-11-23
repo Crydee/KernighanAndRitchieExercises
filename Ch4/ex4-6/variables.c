@@ -1,5 +1,5 @@
 /* this program forms the basis on which exercises 4-3 through 4-10 build */
-/*Add access to library functions like sin, exp, and pow. */
+/* Add commands for handling variables.  Add a variable for the most recently printed value.*/
 
 #include <stdio.h>
 #include <stdlib.h> /* for atof() - in K&R, math.h is referenced - this is an anachronism */
@@ -25,7 +25,7 @@ void clear_stack();
 int main(void)
 {
   int type, last_type = 0,no_pop = 0;
-  double op2;
+  double op2, v;
   char s[MAXOP];
   double variables[26];
 
@@ -83,13 +83,16 @@ int main(void)
       case '\n':
         /* We don't want to pop the top of the stack when we just want to display the output of a command. */
         if(!no_pop)
-          printf("\t%.8g\n", pop());
+          printf("\t%.8g\n", v = pop());
         else
           no_pop = 0;
         break;
       default:
-        if (('A' <= type) && ('Z' >= type)) {
+        if (('A' <= type) && ('Z' >= type))
           push(variables[type - 'A']);
+        else if (type == 'v') {
+          printf("\t%.8g\n", v);
+          no_pop = 1;
         }
         else
           printf("error: unknown command %s\n", s);
@@ -254,7 +257,10 @@ int getop(char s[])
     s[i] = '\0';
     if(c != EOF)
       ungetch(c);
-    return STRING;
+    if (strlen(s) > 1)
+      return STRING; /* > 1 character, it's a name*/
+    else
+      return s[0];  /* only one character so it may be a command.*/
   }
   if(!isdigit(c) && c != '.' && c != '-')
     return c; /* not a number */
