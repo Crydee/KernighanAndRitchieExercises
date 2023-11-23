@@ -75,7 +75,7 @@ int main(void)
           /* The last arg was a variable, so we want to pop it's value from the stack and assign the value
            * before to the variable identifier.*/
           pop();
-          push(variables[last_type] = pop());
+          push(variables[last_type - 'A'] = pop());
         }
         else
           printf("Error: can't assign to an invalid variable identifier.");
@@ -89,7 +89,7 @@ int main(void)
         break;
       default:
         if (('A' <= type) && ('Z' >= type)) {
-          push(variables[type]);
+          push(variables[type - 'A']);
         }
         else
           printf("error: unknown command %s\n", s);
