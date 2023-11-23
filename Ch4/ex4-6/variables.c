@@ -90,10 +90,8 @@ int main(void)
       default:
         if (('A' <= type) && ('Z' >= type))
           push(variables[type - 'A']);
-        else if (type == 'v') {
-          printf("\t%.8g\n", v);
-          no_pop = 1;
-        }
+        else if (type == 'v')
+          push(v);
         else
           printf("error: unknown command %s\n", s);
         break;
