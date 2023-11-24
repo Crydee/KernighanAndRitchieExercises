@@ -312,9 +312,8 @@ void ungetch(int c) /* push character back on input */
 
 /* ungetchs: push back an entire string onto the input.*/
 void ungetchs(char * s) {
-  int string_index = 0;
   int string_length = strlen(s);
 
-  while (string_index < string_length)
-    ungetch(s[string_index++]);
+  while (string_length > 0)
+    ungetch(s[--string_length]);
 }
