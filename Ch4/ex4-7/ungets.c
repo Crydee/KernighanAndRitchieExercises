@@ -231,7 +231,7 @@ void clear_stack(void) {
 
 int getch(void);
 void ungetch(int);
-void ungetchs(char *);
+void ungets(char *);
 
 /* getop: get next operator or numeric operand */
 int getop(char s[])
@@ -310,8 +310,8 @@ void ungetch(int c) /* push character back on input */
     buf[bufp++] = c;
 }
 
-/* ungetchs: push back an entire string onto the input.*/
-void ungetchs(char * s) {
+/* ungets: push back an entire string onto the input.*/
+void ungets(char * s) {
   int string_length = strlen(s);
 
   while (string_length > 0)
