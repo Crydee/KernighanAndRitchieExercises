@@ -15,7 +15,6 @@
 int getop(char []);
 int handle_cmd(int);
 int handle_string(char *);
-int handle_variable(char *);
 double pop(void);
 void push(double);
 void show_top(void);
@@ -204,12 +203,6 @@ int handle_cmd(int op) {
       printf("%c is not a valid command", op);
    }
   return no_pop;
-}
-
-/* handle_variable: handle the input of a variable name.*/
-int handle_variable(char * s) {
-  /* Push the value of the variable to the stack.*/
-
 }
 
 /* show_top: print the top element of the stack without popping it */
