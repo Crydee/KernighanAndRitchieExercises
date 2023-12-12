@@ -6,9 +6,10 @@
 #define MAXOP 100 /* max size of operand or operator */
 #define NUMBER '0' /* signal that a number was found */
 
-int getop(char []);
+int getop(char input_line[], char output_line[]);
 void push(double);
 double pop(void);
+int get_line(char line[], int lim);
 
 /* reverse Polish calculator */
 
@@ -16,9 +17,11 @@ int main(void)
 {
   int type;
   double op2;
-  char s[MAXOP];
+  char s[MAXOP], input_line[1000];
 
-  while((type = getop(s)) != EOF)
+  get_line(input_line, 1000);
+  printf("input line is: %s\n", input_line);
+  while((type = getop(input_line, s)) > 0)
   {
     switch(type)
     {
@@ -85,12 +88,13 @@ double pop(void)
 int getch(void);
 void ungetch(int);
 
+int ndex = 0;
 /* getop: get next operator or numeric operand */
-int getop(char s[])
+int getop(char input_line[], char s[])
 {
   int i, c;
 
-  while((s[0] = c = getch()) == ' ' || c == '\t')
+  while((s[0] = c = input_line[ndex++]) == ' ' || c == '\t')
     ;
 
   s[1] = '\0';
@@ -98,14 +102,14 @@ int getop(char s[])
     return c; /* not a number */
   i = 0;
   if(isdigit(c)) /* collect integer part */
-    while(isdigit(s[++i] = c = getch()))
+    while(isdigit(s[++i] = c = input_line[ndex++]))
       ;
   if(c == '.')
-    while(isdigit(s[++i] = c = getch()))
+    while(isdigit(s[++i] = c = input_line[ndex++]))
       ;
   s[i] = '\0';
   if(c != EOF)
-    ungetch(c);
+    ndex--;
   return NUMBER;
 }
 
@@ -125,4 +129,20 @@ void ungetch(int c) /* push character back on input */
     printf("ungetch: too many characters\n");
   else
     buf[bufp++] = c;
+}
+
+int get_line(char line[], int lim) {
+  int c, ii;
+
+  for (ii = 0; (ii < lim - 1) && ((c = getchar()) != EOF) && (c != '\n'); ii++)
+  {
+    line[ii] = c;
+  }
+  if (c == '\n')
+  {
+    line[ii] = c;
+    ii++;
+  }
+  line[ii] = '\0';
+  return ii;
 }
