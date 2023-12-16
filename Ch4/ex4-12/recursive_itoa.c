@@ -17,21 +17,24 @@ int main() {
 
 void rec_itoa(int n, char s[])
 {
-  static int i;  
+  static int i;
 
-  if (n / 10)
-    rec_itoa(n/10, s);
-  else {
+  if (n / 10) /* If we are not at the most significant digit, then we want to call this fct to handle the more significant digits first.*/
+    rec_itoa(n / 10, s);
+  else { /* We are at the most significant digit, so we set the index to zero, as we want to fill the array from the left.*/
     i = 0;
-    if (n < 0)
+    if (n < 0) /* We handle the number being negative here, and from then on we use the absolute val of the number to get the digits.*/
       s[i++] = '-';
   }
 
+  /* These two lines are common to the end case as well as to the recursive case. We always want to add the value of the current
+   * right-most digit of the number to the array, and to terminate the array with a null character.  The null will be overwritten in all
+   * but the  first call of the fct (the one that handles the least significant digit.*/
   s[i++] = abs(n) % 10 + '0';
   s[i] = '\0';
 }
 
-void printd(int n) 
+void printd(int n)
 {
   if (n < 0) {
     putchar('-');
