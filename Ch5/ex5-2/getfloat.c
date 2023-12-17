@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 int getch(void);
-float getfloat(float *pf);
+int getfloat(float *pf);
 int refactored_getint(int *pn);
 void ungetch(int);
 
@@ -33,7 +33,7 @@ void ungetch(int c) /* push character back on input */
     buf[bufp++] = c;
 }
 
-float getfloat(float *pf)
+int getfloat(float *pf)
 {
   int c, sign;
 
@@ -55,11 +55,12 @@ float getfloat(float *pf)
   }
   for (*pf = 0.0; isdigit(c); c = getch())
     *pf = 10 * *pf + (c - '0');
-  *pf *= sign;
-  if (c == '.') {
-    for (int place = 10; isdigit(c = getch()); place *= 10)
-      *pf += (float)((c - '0') * sign) / place; /* CRD this is potentially dodgy */
-  }
+  if (c == '.')
+    c = getch();
+  int place;
+  for (place = 1; isdigit(c); c = getch(), place *= 10)
+    *pf = 10 * *pf + (c - '0');
+  *pf = (*pf * sign) / place;
   if (c != EOF)
     ungetch(c);
   return c;
