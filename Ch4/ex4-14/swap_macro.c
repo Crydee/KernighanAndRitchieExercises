@@ -1,9 +1,9 @@
 #include <stdio.h>
 
 #define swap(t, x, y) {t temp = y; \
-  y = x; \
-  x = temp; \
-  }
+                       y = x; \
+                       x = temp; \
+                       }
 
 int main() {
   int varone = 1, vartwo = 2;
