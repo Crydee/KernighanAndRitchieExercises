@@ -1,4 +1,4 @@
-/* Write getfloat, the floating-point analog of getint.  What type does getfloat retur as its function value? */
+/* Write getfloat, the floating-point analog of getint.  What type does getfloat return as its function value? */
 
 #include <ctype.h>
 #include <stdio.h>
@@ -33,6 +33,8 @@ void ungetch(int c) /* push character back on input */
     buf[bufp++] = c;
 }
 
+/* getfloat: build up a floating point value from a stream of characters.  We return an int to indicate whether we suceeded
+ * in building up a float or not.  We communicate the built up float to the calling fct using the pointer parameter. */
 int getfloat(float *pf)
 {
   int c, sign;
