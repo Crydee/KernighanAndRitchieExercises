@@ -1,10 +1,10 @@
-/* Wtiet the function strend(s,t), which returns 1 if the string t occurs at the end of the string s, and zero otherwise. */
+/* Write the function strend(s,t), which returns 1 if the string t occurs at the end of the string s, and zero otherwise. */
 #include <stdio.h>
 
 int strend(char *s, char *t);
 
 int main() {
-  char s[100] = "abcdef01234", t[100] = "01234";
+  char s[100] = "J C Fnafwe", t[100] = "ffwe";
 
   printf("s is: %s\n", s);
   printf("t is: %s\n", t);
