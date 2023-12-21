@@ -13,7 +13,7 @@ int main() {
   my_strncpy(string_1, string_2, 7);
   printf("String 1 after the copy: %s\n", string_1);
 
-  char string_3[50] = "abcdefg", string_4[50] = "12345";
+  char string_3[50] = "abcdefg\0aaaaaaaaa", string_4[50] = "12345";
   printf("String 3 is: %s\nString 4 is: %s\n", string_3, string_4);
   my_strncat(string_3, string_4, 4);
   printf("String 3 after concat'ing 4 letters of String 2: %s\n", string_3);
