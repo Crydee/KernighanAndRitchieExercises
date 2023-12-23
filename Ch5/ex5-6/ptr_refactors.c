@@ -6,6 +6,7 @@
 #include <string.h>
 
 int ptr_atoi(char *s);
+double ptr_atof(char *s);
 int ptr_getline(char *s, int lim);
 void ptr_itoa(int n, char *s);
 void rec_ptr_itoa(int n, char *s);
@@ -33,6 +34,11 @@ int main() {
   printf("Testing our pointer version of strindex by searching for the string %s in %s\n", needle, heystack);
   int loc = ptr_strindex(heystack, needle);
   printf("calling ptr_strindex searching for the string %s in %s gives: %d\n", needle, heystack, loc);
+
+  printf("Test our pointer version of atof by providing a string of digits (optionally preceeded by a '+' or '-' and containing a decimal place:\n");
+  ptr_getline(input, 100);
+  double dresult = ptr_atof(input);
+  printf("Calling pointer atof on %s gave: %f\n", input, dresult);
 }
 
 /* ptr_getline: get line into s, return length. */
@@ -121,4 +127,25 @@ int ptr_strindex(char *s, char *t) {
       return s- start;
   }
   return -1;
+}
+
+/* ptr_atof: convert string s to double; pointer version. */
+double ptr_atof(char *s) {
+  double val, power;
+  int sign;
+
+  while (isspace(*s)) /* Skip whitespace. */
+    s++;
+  sign = (*s == '-') ? -1 : 1;
+  if (*s == '-' || *s == '+') /* Skip any sign characters. */
+    s++;
+  for (val = 0.0; isdigit(*s); s++)
+    val = 10 * val + (*s - '0');
+  if (*s == '.') /* Handle a possible decimal point. */
+    s++;
+  for (power = 1; isdigit(*s); s++) {
+    val = 10 * val + (*s - '0');
+    power *= 10;
+  }
+  return val = sign * val / power;
 }
