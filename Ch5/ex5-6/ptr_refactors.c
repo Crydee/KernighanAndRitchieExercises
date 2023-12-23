@@ -109,6 +109,7 @@ void rec_ptr_itoa(int n, char *s) {
   *(s + position++) = '0' - n%10;
   *(s + position) = '\0';
 }
+
 /* ptr_strindex: return index of t in s, -1 if none. */
 int ptr_strindex(char *s, char *t) {
   char *i, *j, *start = s;
