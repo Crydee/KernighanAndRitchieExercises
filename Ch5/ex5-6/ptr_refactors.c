@@ -14,14 +14,19 @@ void reverse(char *s);
 int main() {
   char input[100], atoi_in[] = "12345";
   int n = -12345;
-//  ptr_getline(input, 10);
-//  printf("Input was %s", input);
-//  printf("Calling pointer atoi on %s gave: %d\n", input, ptr_atoi(input));
-//  for (int i = 0; i < 100; i++)
-//    input[i] = 'a';
-  printf("the contents of input is: %s\n", input);
-  ptr_itoa(n, input);
-  printf("calling itoa on %d gives %s\n", n, input);
+  printf("The char with value 97 is: %c\n", 97);
+  printf("Test our pointer version of getline by providing some input:\n");
+  ptr_getline(input, 100);
+  printf("Input was %s", input);
+
+  printf("Test our pointer version of atoi by providing a string of digits (optionally preceeded by a '+' or '-':\n");
+  ptr_getline(input, 100);
+  int result = ptr_atoi(input);
+  printf("Calling pointer atoi on %s gave: %d\n", input, result);
+
+  printf("Testing our pointer version of itoa by mapping the resulting int back to a string.\n");
+  ptr_itoa(result, input);
+  printf("calling itoa on %d gives %s\n", result, input);
 }
 
 /* ptr_getline: get line into s, return length. */
@@ -39,7 +44,7 @@ int ptr_getline(char *s, int lim) {
 
 /* ptr_atoi: convert s to integer; ptr version, based on version on P61. */
 int ptr_atoi(char *s) {
-  int n, sign;
+  int n = 0, sign;
   /* Skip whitespace */
   while (isspace(*s))
     s++;
