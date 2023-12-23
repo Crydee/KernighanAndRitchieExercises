@@ -6,14 +6,19 @@
 
 int ptr_atoi(char *s);
 int ptr_getline(char *s, int lim);
+void ptr_itoa(int n, char *s);
 
 int main() {
   char input[100], atoi_in[] = "12345";
-
-  ptr_getline(input, 10);
-  printf("Input was %s", input);
-  printf("Calling pointer atoi on %s gave: %d\n", input, ptr_atoi(input));
-
+  int n = 12345;
+//  ptr_getline(input, 10);
+//  printf("Input was %s", input);
+//  printf("Calling pointer atoi on %s gave: %d\n", input, ptr_atoi(input));
+//  for (int i = 0; i < 100; i++)
+//    input[i] = 'a';
+  printf("the contents of input is: %s\n", input);
+  ptr_itoa(n, input);
+  printf("calling itoa on %d gives %s\n", n, input);
 }
 
 /* ptr_getline: get line into s, return length. */
@@ -41,4 +46,21 @@ int ptr_atoi(char *s) {
   while (isdigit(*s))
     n = 10 * n + (*s++ - '0');
   return sign * n;
+}
+
+/* ptr_itoa: convert n to characters in s */
+void ptr_itoa(int n, char *s) {
+  static int position;
+  if (n/10) {
+    ptr_itoa(n/10, s);
+  }
+  else {
+   position = 0;
+   if (n < 0)
+     *(s + position++) = '-';
+  }
+  if (n > 0)
+    n = -n;
+  *(s + position++) = '0' - n%10;
+  *(s + position) = '\0';
 }
