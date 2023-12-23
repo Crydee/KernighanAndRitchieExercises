@@ -10,6 +10,7 @@ int ptr_getline(char *s, int lim);
 void ptr_itoa(int n, char *s);
 void rec_ptr_itoa(int n, char *s);
 void reverse(char *s);
+int ptr_strindex(char *s, char *t);
 
 int main() {
   char input[100], atoi_in[] = "12345";
@@ -27,6 +28,11 @@ int main() {
   printf("Testing our pointer version of itoa by mapping the resulting int back to a string.\n");
   ptr_itoa(result, input);
   printf("calling itoa on %d gives %s\n", result, input);
+
+  char needle[] = "fox", heystack[] = "The quick brown fox jumps over the lazy dog.";
+  printf("Testing our pointer version of strindex by searching for the string %s in %s\n", needle, heystack);
+  int loc = ptr_strindex(heystack, needle);
+  printf("calling ptr_strindex searching for the string %s in %s gives: %d\n", needle, heystack, loc);
 }
 
 /* ptr_getline: get line into s, return length. */
@@ -102,4 +108,16 @@ void rec_ptr_itoa(int n, char *s) {
     n = -n;
   *(s + position++) = '0' - n%10;
   *(s + position) = '\0';
+}
+/* ptr_strindex: return index of t in s, -1 if none. */
+int ptr_strindex(char *s, char *t) {
+  char *i, *j, *start = s;
+
+  for (; *s != '\0'; s++) {
+    for (i = s, j = t; (*j != '\0') && (*j == *i); i++, j++)
+      ;
+    if (j > t && *j == '\0') /* Check to see if we have a match. */
+      return s- start;
+  }
+  return -1;
 }
