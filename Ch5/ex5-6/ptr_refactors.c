@@ -58,11 +58,12 @@ int ptr_atoi(char *s) {
 
 /* reverse: reverse the string s. */
 void reverse(char *s) {
-  int c, i, j, len = strlen(s);
-  for (i = 0, j = --len; i < j; i++, j--) {
-    c = *(s + i);
-    *(s + i) = *(s + j);
-    *(s + j) = c;
+  char *j;
+  int c;
+  for (j = s + (strlen(s) - 1); s < j; s++, j--) {
+    c = *s;
+    *s = *j;
+    *j = c;
   }
 }
 
