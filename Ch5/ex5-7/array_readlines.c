@@ -16,11 +16,11 @@ void writelines(char *lineptr[], int nlines);
 int main() {
   char mains_arr[ALLOCSIZE], *lines[10];
 
-  printf("Calling our modified readlines\n");
-  modified_readlines(lines, 10, mains_arr, ALLOCSIZE);
-
   printf("Calling readlines\n");
   readlines(lines, 10);
+
+  printf("Calling our modified readlines\n");
+  modified_readlines(lines, 10, mains_arr, ALLOCSIZE);
 }
 
 /* ptr_getline: get line into s, return length. */
@@ -43,7 +43,7 @@ int modified_readlines(char *lineptr[], int maxlines, char *parr, int arrlen) {
 
   nlines = 0;
   while ((len = ptr_getline(line, MAXLEN)) > 0)
-    if (nlines >= maxlines || (parr + len < pstart + ALLOCSIZE))
+    if (nlines >= maxlines || (parr + len >= pstart + arrlen))
       return -1;
     else {
       line[len-1] = '\0'; /* Delete newline. */
