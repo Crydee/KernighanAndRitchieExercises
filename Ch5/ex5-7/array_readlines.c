@@ -49,7 +49,7 @@ int modified_readlines(char *lineptr[], int maxlines, char *parr, int arrlen) {
       line[len-1] = '\0'; /* Delete newline. */
       strcpy(parr,line);
       lineptr[nlines++] = parr;
-      parr += (len + 1);
+      parr += len;
     }
   return nlines;
 }
