@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
+int getop(char *s);
 int ptr_atoi(char *s);
 double ptr_atof(char *s);
 int ptr_getline(char *s, int lim);
@@ -148,4 +149,49 @@ double ptr_atof(char *s) {
     power *= 10;
   }
   return val = sign * val / power;
+}
+
+int getch(void);
+void ungetch(int);
+#define NUMBER '0'
+
+/* getop: get next operator or numeric operand */
+int getop(char *s)
+{
+  int c;
+
+  while((*s = c = getch()) == ' ' || c == '\t')
+    ;
+  *(s+1) = '\0';
+  if(!isdigit(c) && c != '.')
+    return c; /* not a number */
+
+  if(isdigit(c)) /* collect integer part */
+    while(isdigit(*(++s) = c = getch()))
+      ;
+  if(c == '.')
+    while(isdigit(*(++s) = c = getch()))
+      ;
+  *s = '\0';
+  if(c != EOF)
+    ungetch(c);
+  return NUMBER;
+}
+
+#define BUFSIZE 100
+
+char buf[BUFSIZE]; /* buffer for ungetch */
+char *bufp = buf; /* next free position in buf */
+
+int getch(void) /* get a (possibly pushed back) character */
+{
+  return (bufp > buf) ? *(--bufp) : getchar();
+}
+
+void ungetch(int c) /* push character back on input */
+{
+  if(bufp >= buf + BUFSIZE)
+    printf("ungetch: too many characters\n");
+  else
+    *bufp++ = c;
 }
