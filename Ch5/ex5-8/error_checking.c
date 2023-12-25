@@ -6,7 +6,7 @@ int day_of_year(int year, int month, int day);
 void month_day(int year, int yearday, int *pmonth, int *pday);
 
 int main() {
-  int month, day, dayofyear = 221, year = 1884;
+  int month, day, dayofyear = 366, year = 1884;
 
   printf("What day of what month was day %d of %d?\n", dayofyear, year);
   month_day(year, dayofyear, &month, &day);
@@ -34,8 +34,10 @@ int day_of_year(int year, int month, int day) {
     printf("Please provide a month number between 1 and 12.\n");
     return -1;
   }
+
   leap = (year%4 == 0 && year%100 != 0) || year%400 == 0;
-  if (day > daytab[leap][month])
+
+  if (day < 1 || day > daytab[leap][month])
     printf("Please provide a day that is actually in the specified month.\n");
   for (i = 1; i < month; i++)
     day += daytab[leap][i];
@@ -49,13 +51,20 @@ void month_day(int year, int yearday, int *pmonth, int *pday) {
   if (yearday < 1) {
     printf("Please provide a positive number of days\n");
     return;
+  } else if (year < 0) {
+    printf("Please provide a non-negative year.\n");
+    return;
   }
+
   leap = (year%4 == 0 && year%100 != 0) || year%400 == 0;
-  for (i = 1; yearday > daytab[leap][i] && i < 14; i++)
+  for (i = 1; yearday > daytab[leap][i] && i < 13; i++)
     yearday -= daytab[leap][i];
-  if (i >= 14) {
+  if (i >= 13) {
     printf("Please provide a number of days that fits within the specified year\n");
-  }
+    *pmonth = -1;
+    *pday = -1;
+  } else {
   *pmonth = i;
   *pday = yearday;
+  }
 }
