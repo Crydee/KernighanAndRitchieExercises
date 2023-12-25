@@ -23,6 +23,17 @@ static char daytab[2][13] = {
   {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
 };
 
+/* I think the nicest thing to do is to split out indexing of the form daytab[a][b] into two steps, as that avoids having to keep
+ * track of the type of pointer that we are manipulating with each operation in a complicated expression.  For example,
+ * daytab is a pointer to an array of 13 chars, so (daytab + 1) jumps 13 chars along to the start of the second array of 13 chars,
+ * and *daytab gives us a pointer to a char, since *daytab is 'an array of 13 chars, and in c arrays' values are pointers to the
+ * first elt of the array. That means that in expressions like *(*(daytab + leap) + n), to obtain the number of days in some month,
+ * we need to keep track of what daytab is and what *daytab is, and that is potentially confusing.
+ *
+ * Simpler would be to define an intermediate pointer to char, p = *(daytab + leap), which gives us a convenient handle on the array
+ * of month day lengths that we want to use for a given year.  We can then access the number of days of month n of a given year
+ * with *(p + n), which is far simpler and easier to reason about in expressions.
+
 /* day_of_year: set day of year from month & day. */
 int day_of_year(int year, int month, int day) {
   int i, leap;
@@ -36,11 +47,11 @@ int day_of_year(int year, int month, int day) {
   }
 
   leap = (year%4 == 0 && year%100 != 0) || year%400 == 0;
-
-  if (day < 1 || day > *(*(daytab + leap) + month)) /* This works but is quite ugly, better to split it out. */
+  char *p = *(daytab + leap);
+  if (day < 1 || day > *(p + month))
     printf("Please provide a day that is actually in the specified month.\n");
   for (i = 1; i < month; i++)
-    day += *(*(daytab + leap) + i); /* This works but is quite ugly, better to split it out. */
+    day += *(p + i);
   return day;
 }
 
@@ -57,8 +68,9 @@ void month_day(int year, int yearday, int *pmonth, int *pday) {
   }
 
   leap = (year%4 == 0 && year%100 != 0) || year%400 == 0;
-  for (i = 1; yearday > *(*(daytab + leap) + i) && i < 13; i++) /* This works but is quite ugly, better to split it out. */
-    yearday -= *(*(daytab + leap) + i); /* This works but is quite ugly, better to split it out. */
+  char *p = *(daytab + leap);
+  for (i = 1; yearday > *(p + i) && i < 13; i++)
+    yearday -= *(p + i); /* This works but is quite ugly, better to split it out. */
   if (i >= 13) {
     printf("Please provide a number of days that fits within the specified year\n");
     *pmonth = -1;
