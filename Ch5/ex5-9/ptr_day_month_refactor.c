@@ -6,7 +6,7 @@ int day_of_year(int year, int month, int day);
 void month_day(int year, int yearday, int *pmonth, int *pday);
 
 int main() {
-  int month, day, dayofyear = 365, year = 1883;
+  int month, day, dayofyear = 366, year = 1883;
 
   printf("What day of what month was day %d of %d?\n", dayofyear, year);
   month_day(year, dayofyear, &month, &day);
@@ -32,7 +32,7 @@ static char daytab[2][13] = {
  *
  * Simpler would be to define an intermediate pointer to char, p = *(daytab + leap), which gives us a convenient handle on the array
  * of month day lengths that we want to use for a given year.  We can then access the number of days of month n of a given year
- * with *(p + n), which is far simpler and easier to reason about in expressions.
+ * with *(p + n), which is far simpler and easier to reason about in expressions. */
 
 /* day_of_year: set day of year from month & day. */
 int day_of_year(int year, int month, int day) {
