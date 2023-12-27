@@ -61,9 +61,8 @@ int main(int argc, char *argv[])
         argc = 1;
         break;
     }
-    printf("\t%.8g\n", pop());
   }
-
+  printf("\t%.8g\n", pop());
   return 0;
 }
 
