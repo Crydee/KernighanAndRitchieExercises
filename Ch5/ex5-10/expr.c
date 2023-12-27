@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <stdlib.h> /* for atof() - in K&R, math.h is referenced - this is an anachronism */
+#include <string.h>
 
 #define MAXOP 100 /* max size of operand or operator */
 #define NUMBER '0' /* signal that a number was found */
@@ -12,8 +13,13 @@
 int getop(char []);
 void push(double);
 double pop(void);
+void ungets(char *);
 
 /* reverse Polish calculator */
+
+
+/* Idea: use ungets from earlier exercise to push the strings in argv onto the buffer and then have getop collect the contents of the
+ * strings using getch as before. */
 
 int main(int argc, char *argv[])
 {
@@ -21,9 +27,11 @@ int main(int argc, char *argv[])
   double op2;
   char s[MAXOP];
 
-  while((type = getop(s)) != EOF)
+  while(--argc)
   {
-    switch(type)
+    ungets(" ");
+    ungets(*++argv);
+    switch(type = getop(s))
     {
       case NUMBER:
         push(atof(s));
@@ -50,8 +58,10 @@ int main(int argc, char *argv[])
         break;
       default:
         printf("error: unknown command %s\n", s);
+        argc = 1;
         break;
     }
+    printf("\t%.8g\n", pop());
   }
 
   return 0;
@@ -128,4 +138,12 @@ void ungetch(int c) /* push character back on input */
     printf("ungetch: too many characters\n");
   else
     buf[bufp++] = c;
+}
+
+/* ungets: push back an entire string onto the input.*/
+void ungets(char * s) {
+  int string_length = strlen(s);
+
+  while (string_length > 0)
+    ungetch(s[--string_length]);
 }
