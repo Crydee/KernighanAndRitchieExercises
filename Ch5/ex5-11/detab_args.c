@@ -48,16 +48,16 @@ void detab(char *tab) {
 
   while ((c = getchar()) != EOF) {
     switch (c) {
-      case '\t':
+      case '\t': /* Handle finding a tab character. */
         do {
           putchar(' ');
         } while (tab_pos(tab, pos++) != YES);
         break;
-      case '\n':
+      case '\n': /* Handle newline characters. */
         putchar('\n');
         pos = 1;
         break;
-      default:
+      default: /* Handle any other characters. */
         putchar(c);
         pos++;
         break;
