@@ -1,66 +1,46 @@
-/* Write a program entab that replaces strings of blanks by the minimum number of tabs and blanks to achieve the same spacing. */
-/* Use the same tab stops as for detab. */
-
+/* Modify the programs entab and detab to accept a list of tab stops as arguments.
+ * Use the default tab settings if there are no arguments. */
 #include <stdio.h>
 
 #define STOPLEN 10 /* The # of spaces between tab-stops. */
 
+void detab(int argc, char *argv[]);
 void null_arr(char arr[], int length);
 
-int main()
-{
-  int c;
-  int num_cons_blanks; /* The number of consecutive blanks that we have encountered since last printing a char. */
-  int position_mod_tab; /* Position, past the last tab-stop of the next character to be printed in the line. */
-  char blanks[STOPLEN + 1]; /* Array to store the blanks that we encounter, null terminated.*/
+int main() {}
 
-  num_cons_blanks = position_mod_tab = 0;
-  null_arr(blanks, STOPLEN + 1);
+void detab(int argc, char *argv[]) {
+  int c, pos = 1; /* pos is the position of the space in the output line that the program is at. */
+  int nb = 0; /* The number of blanks we need to print. */
+  int nt = 0; /* The number of tabs we need to print. */
 
-  while ((c = getchar()) != EOF)
-  {
-    if (c == ' ')
-    {
-        blanks[num_cons_blanks] = c;
-        num_cons_blanks++;
-        if (num_cons_blanks == (STOPLEN - position_mod_tab))
-        {
-            /* The blanks in our array would take us to the next tab-stop, so print out a tab. */
-            printf("\t");
-            /* Zero our position relative to the last tab stop, the idx of the arr, and the arr's contents. */
-            null_arr(blanks, num_cons_blanks);
-            position_mod_tab = num_cons_blanks = 0;
-        }
-    }
-    else 
-    {
-        /* We print out the preceding blanks and then the non-blank char. */
-        if (num_cons_blanks != 0)
-        {
-          /* Print out the preceding blanks. */
-          printf("%s", blanks);
-          position_mod_tab = ((position_mod_tab + num_cons_blanks) % STOPLEN);
-          null_arr(blanks, num_cons_blanks);
-          num_cons_blanks = 0;
-        }
-        
-        printf("%c", c);
-        if ((c == '\n') || (c == '\t'))
-        {
-          position_mod_tab = 0;
-        }
-        else
-        {
-          position_mod_tab = ((position_mod_tab + 1) % STOPLEN);
-        }        
+  for (pos = 1; (c = getchar()) != EOF; pos++) {
+    if (c == ' ') {
+
+      /* Check to see if the space character has taken us to a tabstop and, if so, replace the accumulated spaces with a tab. */
+      if ((pos % STOPLEN) != 0) {
+        nb++;
+      }
+      else {
+        nb = 0;
+        nt++;
+      }
+
+    } else {
+
+      while (nt--)
+        putchar('\t'); /* Print the accumulated tabs. */
+
+      if (c == '\t') {
+        nb = 0; /* Forget the accumulated blanks. */
+        pos += ((pos - 1) % STOPLEN) - 1; /* Move pos to the next tab stop.  pos will be incremented again at the end of this iteration. */
+      } else if (c == '\n') {
+        pos = 0; /* This will be incremented back to 1 at the end of this iteration. */
+      }
+
+      while (nb--)
+        putchar(' '); /* Print the accumulated blanks. */
+      putchar(c);
     }
   }
-}
-
-void null_arr(char arr[], int length)
-{
-    int idx;
-    
-    for (idx = 0; idx < length; idx++)
-      arr[idx] = '\0';
 }
