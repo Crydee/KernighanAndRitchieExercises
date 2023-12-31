@@ -65,7 +65,7 @@ void detab(char *tab) {
   }
 }
 
-/* tab_pos: determine if pos it at a tabstop. */
+/* tab_pos: determine if pos is at a tabstop. */
 int tab_pos(char *tab, int pos) {
   if (pos > MAXLINE)
     return YES;
