@@ -2,6 +2,7 @@
  *     entab -m +n
  * to mean tab stops every n columns, starting at column m.  Choose convenient (for the user) default behaviour. */
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -24,21 +25,41 @@ int main(int argc, char *argv[]) {
 
 /* set_tab_arr: set the contents of the tabstop array from a list provided when the program was invoked. */
 void set_tab_arr(int argc, char *argv[], char *tab) {
+  int tab_interval = 0, tab_start = 0;
+
   for (int i = 0;i <= MAXLINE; i++)
     tab[i] = NO;
 
-  /* See if we have been provided with a list of tab stops. */
+  /* See if we have been provided with any arguments. */
   if (argc > 1) {
     while (--argc) {
-      int tabstop = atoi(*++argv);
-      if (0 < tabstop && tabstop <= MAXLINE) {
-        tab[tabstop] = YES;
+      if (isdigit((*++argv)[0])) { /* If the 1'st char of the arg is a digit then treat the arg as a tabstop. */
+        int tabstop = atoi(*argv);
+        if (0 < tabstop && tabstop <= MAXLINE)
+          tab[tabstop] = YES;
+      } else if (*argv[0] == '+') { /* the +n case. */
+        tab_interval = atoi(++(*argv));
+        printf("Setting tabstops every %d columns\n", tab_interval);
+      } else if (*argv[0] == '-') { /* the -m case. */
+        tab_start = atoi(++(*argv));
+        printf("Setting tabstops starting from column %d\n", tab_start);
       }
     }
-  } else {/* Use default tab stops. */
-    for (int i = 1; i <= MAXLINE; i++)
-      if ((i % STOPLEN) == 0)
+    /* Set default values if the user doesn't specify any. */
+    tab_start = tab_start > 0 ? tab_start : STOPLEN;
+    tab_interval = tab_interval > 0 ? tab_interval : STOPLEN;
+
+    tab[tab_start] = YES;
+    for (int i = tab_start + 1; i <=MAXLINE; i++) {
+      if (((i - tab_start) % tab_interval) == 0)
         tab[i] = YES;
+    }
+  } else {/* Use default tab stops. */
+      for (int i = 1; i <= MAXLINE; i++) {
+        if ((i % STOPLEN) == 0) {
+          tab[i] = YES;
+      }
+    }
   }
 }
 
