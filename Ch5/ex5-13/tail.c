@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define DEFAULT_NUM_LINES 10
 #define MAX_LINE_LEN 1000
 #define MAX_NUM_LINES 100
 #define LINE_STORE_LEN (MAX_NUM_LINES * MAX_LINE_LEN) + 1
@@ -28,6 +29,21 @@ int main(int argc, char *argv[])
   char *line_ptrs[MAX_NUM_LINES];
   char **pstore = line_ptrs;
 
+  /* Handle input */
+  int lines_to_print;
+  if (argc >= 2) {
+    if (argc == 2 && (*++argv)[0] == '-')
+      lines_to_print = atoi(++(*argv));
+    else {
+      printf("Usage: tail -n to print the last n lines of input.\n");
+      exit(1);
+    }
+  }
+  if (0 > lines_to_print || lines_to_print > MAX_NUM_LINES)
+    lines_to_print = DEFAULT_NUM_LINES;
+  printf("Printing the last %d lines.\n", lines_to_print);
+
+  /* Read in the input into the storage buffer. */
   int len;
   /* While there are more lines of input... */
   while ((len = get_line(line, MAX_LINE_LEN))) {
@@ -49,6 +65,12 @@ int main(int argc, char *argv[])
       pstore = line_ptrs;
   }
 
+  /* Print out the lines. */
+  char **pptr = line_ptrs;
+  while (*pptr != NULL) {
+    printf("Line %d: %s\n", (int) (pptr - line_ptrs + 1), *pptr);
+    pptr++;
+  }
 }
 
 /* get_line: Read as much as possible of a line of input into
