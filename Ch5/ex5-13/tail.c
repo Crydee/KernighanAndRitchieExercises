@@ -27,21 +27,20 @@ int main(int argc, char *argv[])
   char *pfree = line_store;
   /* Array of pointers to the lines stored in 'line_store'. */
   char *line_ptrs[MAX_NUM_LINES];
-  char **pstore = line_ptrs;
+  char **pstore = line_ptrs - 1;
 
   /* Handle input */
-  int lines_to_print;
+  int n = DEFAULT_NUM_LINES;
   if (argc >= 2) {
     if (argc == 2 && (*++argv)[0] == '-')
-      lines_to_print = atoi(++(*argv));
+      n = atoi(++(*argv));
     else {
       printf("Usage: tail -n to print the last n lines of input.\n");
       exit(1);
     }
   }
-  if (0 > lines_to_print || lines_to_print > MAX_NUM_LINES)
-    lines_to_print = DEFAULT_NUM_LINES;
-  printf("Printing the last %d lines.\n", lines_to_print);
+  if (0 > n || n > MAX_NUM_LINES)
+    n = DEFAULT_NUM_LINES;
 
   /* Read in the input into the storage buffer. */
   int len;
@@ -52,6 +51,10 @@ int main(int argc, char *argv[])
       pfree = line_store;
     strcpy(pfree, line);
 
+    /* Wrap the array of pointers to lines if we have stored
+     * a multiple of MAX_NUM_LINES. */
+    if (++pstore >= line_ptrs + MAX_NUM_LINES)
+      pstore = line_ptrs;
     *pstore = pfree;
     /* We need to add len + 1 to pfree as we are actually storing
      * len + 1 chars in the ring buffer as the null-terminator
@@ -59,18 +62,26 @@ int main(int argc, char *argv[])
      * we want 'pfree' to point to the free storage after that. */
     pfree = pfree + len + 1;
 
-    /* Wrap the array of pointers to lines if we have stored
-     * a multiple of MAX_NUM_LINES. */
-    if (++pstore >= line_ptrs + MAX_NUM_LINES)
-      pstore = line_ptrs;
   }
 
   /* Print out the lines. */
-  char **pptr = line_ptrs;
-  while (*pptr != NULL) {
-    printf("Line %d: %s\n", (int) (pptr - line_ptrs + 1), *pptr);
-    pptr++;
-  }
+  /* Work out if we have read the requested number of lines,
+   * if not then just print what we have. */
+  /* See if we've read in enough lines, and if we may not have then
+   * check to see if we have wrapped. */
+  if (n > (pstore - line_ptrs + 1) && (*(line_ptrs + MAX_NUM_LINES - 1) == NULL))
+    n = pstore - line_ptrs + 1;
+
+  printf("Printing the last %d lines.\n", n);
+  /* The index of the last line that we handled. */
+  int last = pstore - line_ptrs;
+  /* The findex of the first line to print. */
+  int first = last - (n - 1);
+  if (first < 0)
+    first += MAX_NUM_LINES;
+
+  for (;n-- ;first = (first + 1) % MAX_NUM_LINES)
+    printf("%s", line_ptrs[first]);
 }
 
 /* get_line: Read as much as possible of a line of input into
