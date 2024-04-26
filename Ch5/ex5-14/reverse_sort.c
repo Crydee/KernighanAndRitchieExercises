@@ -48,13 +48,14 @@ int main(int argc, char *argv[])
 
 /* writelines: write out nlines lies pointed to by the ptrs in lineptr. */
 void writelines(char *lineptr[], int nlines, int reverse) {
-  if (reverse) 
-    while (nlines)
-      printf("%s", lineptr[nlines--]);
-  else {
-    int count = 0;
-    while (count < nlines)
-      printf("%s", lineptr[count++]);
-  }
+  int i;
 
+  /* Print in decreasing order. */
+  if (reverse)
+    for (i = nlines-1; i >= 0; i--)
+      printf("%s", lineptr[i]);
+  /* Print in increasing order. */
+  else
+    for (i = 0; i < nlines; i++)
+      printf("%s", lineptr[i]);
 }
