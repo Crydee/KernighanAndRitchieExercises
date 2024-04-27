@@ -1,19 +1,22 @@
 /* Ex 5-15 Add the option -f to fold upper and lower case together, so that case distinctions are not made during sorting; for example, a and A*/
 /* compare equal. */
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 
 #define MAXLINES 5000     /* max # lines to be sorted */
-#define REVERSE 1
-#define NUMERIC 2
+#define REVERSE 1 /* 00000001 */
+#define NUMERIC 2 /* 00000010 */
+#define FOLD 4 /* 00000100 */
+
 char *lineptr[MAXLINES];  /* pointers to text lines */
 
 int readlines(char *lineptr[], int nlines);
 void writelines(char *lineptr[], int nlines, int reverse);
 void reverse_lines(char *lineptr[], int nlines);
-
 void qsort(void *lineptr[], int left, int right, int (*comp)(void *, void *));
 int numcmp(char *, char *);
+int charcmp(char *, char *);
 
 /* sort input lines */
 int main(int argc, char *argv[]) 
@@ -31,14 +34,20 @@ int main(int argc, char *argv[])
         case 'r':
           options |= REVERSE;
           break;
+        case 'f':
+          options |= FOLD;
+          break;
         default:
-          printf("-n for numeric search, -r to print in reverse order\n");
+          printf("-n for numeric sort, -r to print in reverse order, -f for case-insensitive sort\n");
       }
   if (argc)
-    printf("Usage: sort -nr\n");
+    printf("Usage: sort -nrf\n");
 
   if ((nlines = readlines(lineptr, MAXLINES)) >= 0) {
-    qsort((void **) lineptr, 0, nlines - 1, (int (*)(void*, void*))((options & NUMERIC) ? numcmp: strcmp));
+    if (options & NUMERIC)
+      qsort((void **) lineptr, 0, nlines - 1, (int (*)(void*, void*)) numcmp);
+    else
+      qsort((void **) lineptr, 0, nlines - 1, (int (*)(void*, void*))((options & FOLD) ? charcmp: strcmp));
     writelines(lineptr, nlines, options & REVERSE);
     return 0;
   } else {
@@ -61,20 +70,12 @@ void writelines(char *lineptr[], int nlines, int reverse) {
       printf("%s", lineptr[i]);
 }
 
-int mod_strcmp(char *str_one, char *str_two, int case_insensitive) {
-  if (!case_insensitive)
-    return strcmp(str_one, str_two);
-
-  else {
-    /* Go through the strings till we find characters that don't evaluate to equal, or we reach the end of a string. */
-    while (*str_one) {
-      if (*str_one == *str_two)
-        str_one++, str_two++;
-      else if ((*str_one == (*str_two + 'A' - 'a')) || (*str_two == (*str_one + 'A' - 'a')))
-          str_one++, str_two++;
-      else
-       break;
-    } 
-    return *str_one - *str_two;
+/* charcmp: case-insensitive comparison of two strings. */
+int charcmp(char *str_one, char *str_two) {
+  for (; tolower(*str_one) == tolower(*str_two); str_one++, str_two++) {
+    if (!*str_one)
+      /* The two strings evalueate equal. */
+      break;
   }
+  return *str_one - *str_two;
 }
