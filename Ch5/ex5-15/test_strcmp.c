@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -6,23 +7,17 @@ int mod_strcmp(char *str_one, char *str_two, int case_insensitive) {
     return strcmp(str_one, str_two);
 
   else {
-    /* Go through the strings till we find characters that don't evaluate to equal, or we reach the end of a string. */
-    while (*str_one) {
-      if (*str_one == *str_two)
-        str_one++, str_two++;
-      else if ((*str_one == (*str_two + 'A' - 'a')) || (*str_two == (*str_one + 'A' - 'a')))
-          str_one++, str_two++;
-      else
-       break;
-    } 
+    for (; tolower(*str_one) == tolower(*str_two); str_one++, str_two++)
+      if (*str_one == '\0')
+        return 0;
     return *str_one - *str_two;
   }
 }
 
 int main(int argc, char *argv[])
 {
-  char *str_one = "I was the shadow of the waxwing.\n";
-  char *str_two = "I WAS THE SHADOW OF THE WAXWING.\n";
+  char *str_one = "I WAS THE SHADOW OF THE WAXWING.\n";
+  char *str_two = "i was the shadow of the waxwing.\n";
   
   printf("The test strings are:\n\t%s\t%s", str_one, str_two);
 
