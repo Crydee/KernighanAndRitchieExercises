@@ -74,7 +74,7 @@ void writelines(char *lineptr[], int nlines, int reverse) {
 int charcmp(char *str_one, char *str_two) {
   for (; tolower(*str_one) == tolower(*str_two); str_one++, str_two++) {
     if (!*str_one)
-      /* The two strings evalueate equal. */
+      /* The two strings evaluate equal. */
       break;
   }
   return *str_one - *str_two;
