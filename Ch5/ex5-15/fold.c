@@ -19,7 +19,7 @@ int numcmp(char *, char *);
 int charcmp(char *, char *);
 
 /* sort input lines */
-int main(int argc, char *argv[]) 
+int main(int argc, char *argv[])
 {
   int nlines;   /* number of input lines. */
   int options = 0;  /* bit encoding of the command line options. */

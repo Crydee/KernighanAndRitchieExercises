@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 {
   char *str_one = "I WAS THE SHADOW OF THE WAXWING.\n";
   char *str_two = "i was the shadow of the waxwing.\n";
-  
+
   printf("The test strings are:\n\t%s\t%s", str_one, str_two);
 
   int result = mod_strcmp(str_one, str_two, 0);
