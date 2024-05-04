@@ -83,7 +83,7 @@ int charcmp(char *str_one, char *str_two) {
 
 /* An extended charcmp that can handle both case-insensitive comparison, as well as "directory order" comparison. */
 int extended_charcmp(char *str_one, char *str_two, int options) {
-  char a, b; 
+  char a, b;
 
   do {
 
