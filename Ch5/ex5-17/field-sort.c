@@ -22,6 +22,7 @@ int numcmp(char *, char *);
 int charcmp(char *, char *);
 int extended_charcmp(char *, char * , int);
 void error(char*);
+void substr(char*, char*);
 
 int options = 0;  /* bit encoding of the command line options. */
 int pos1 = 0;
@@ -170,4 +171,17 @@ int extended_charcmp(char *str_one, char *str_two, int options) {
 void error(char *err_str) {
   printf("%s", err_str);
   exit(1);
+}
+
+/* substr: Get a substring of s and put in str. */
+void substr(char* s, char* str) {
+  extern int pos1, pos2;
+  int i, j, len = strlen(s);
+
+  if (pos2 > 0 && len > pos2)
+    len = pos2;
+
+  for (i = 0, j = pos1; j < len; i++, j++)
+    str[i] = s[j];
+  str[++i] = '\0';
 }
