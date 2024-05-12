@@ -18,6 +18,7 @@ void reverse_lines(char *lineptr[], int nlines);
 void qsort(void *lineptr[], int left, int right, int (*comp)(void *, void *));
 int numcmp(char *, char *);
 int charcmp(char *, char *);
+int extended_charcmp(char *, char * , int);
 
 /* sort input lines */
 int main(int argc, char *argv[])
@@ -38,6 +39,9 @@ int main(int argc, char *argv[])
         case 'f':
           options |= FOLD;
           break;
+        case 'd':
+          options |= DIR;
+          break;
         default:
           printf("-n for numeric sort, -r to print in reverse order, -f for case-insensitive sort\n");
       }
@@ -48,7 +52,7 @@ int main(int argc, char *argv[])
     if (options & NUMERIC)
       qsort((void **) lineptr, 0, nlines - 1, (int (*)(void*, void*)) numcmp);
     else
-      qsort((void **) lineptr, 0, nlines - 1, (int (*)(void*, void*))((options & FOLD) ? charcmp: strcmp));
+      qsort((void **) lineptr, 0, nlines - 1, (int (*)(void*, void*))((options & FOLD) ? extended_charcmp: strcmp));
     writelines(lineptr, nlines, options & REVERSE);
     return 0;
   } else {
