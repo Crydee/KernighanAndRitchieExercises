@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAXLINELEN 1000 /* Max line length. */
 #define MAXLINES 5000     /* max # lines to be sorted */
 #define REVERSE 1 /* 00000001 */
 #define NUMERIC 2 /* 00000010 */
@@ -18,7 +19,7 @@ int readlines(char *lineptr[], int nlines);
 void writelines(char *lineptr[], int nlines, int reverse);
 void reverse_lines(char *lineptr[], int nlines);
 void qsort(void *lineptr[], int left, int right, int (*comp)(void *, void *));
-int numcmp(char *, char *);
+int field_numcmp(char *, char *);
 int charcmp(char *, char *);
 int extended_charcmp(char *, char * , int);
 void error(char*);
@@ -186,4 +187,16 @@ void substr(char* s, char* str) {
   for (i = 0, j = pos1; j < len; i++, j++)
     str[i] = s[j];
   str[i] = '\0';
+}
+
+/* field_numcmp: Number comparison that is aware of the comparison field. */
+int field_numcmp(char *num1, char *num2) {
+  char comp_key[MAXLINELEN];
+
+  substr(num1, comp_key);
+  float v1 = atof(comp_key);
+  substr(num2, comp_key);
+  float v2 = atof(comp_key);
+
+  /* compare the values and output as appropriate. */
 }
