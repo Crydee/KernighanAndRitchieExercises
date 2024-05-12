@@ -180,8 +180,10 @@ void substr(char* s, char* str) {
 
   if (pos2 > 0 && len > pos2)
     len = pos2;
+  else if (pos2 > 0 && len < pos2)
+    error("substr: string not long enough for sub-string to be found.");
 
   for (i = 0, j = pos1; j < len; i++, j++)
     str[i] = s[j];
-  str[++i] = '\0';
+  str[i] = '\0';
 }
