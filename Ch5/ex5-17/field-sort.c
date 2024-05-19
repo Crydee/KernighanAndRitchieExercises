@@ -21,7 +21,7 @@ void reverse_lines(char *lineptr[], int nlines);
 void qsort(void *lineptr[], int left, int right, int (*comp)(void *, void *));
 int field_numcmp(char *, char *);
 int charcmp(char *, char *);
-int extended_charcmp(char *, char * , int);
+int extended_charcmp(char *, char *);
 void error(char*);
 void substr(char*, char*);
 
@@ -139,31 +139,43 @@ int charcmp(char *str_one, char *str_two) {
 }
 
 /* An extended charcmp that can handle both case-insensitive comparison, as well as "directory order" comparison. */
-int extended_charcmp(char *str_one, char *str_two, int options) {
+int extended_charcmp(char *str_one, char *str_two) {
   char a, b;
+  extern int options, pos1, pos2;
+  int i, j, end_pos;
+
+  /* Start all comparison from pos1, the specified start position.  If no start position was specified then pos1 is zero anyway. */
+  i = j = pos1;
+
+  if (pos2 > 0)
+    end_pos = pos2;
+  else if ((end_pos = strlen(str_one)) > strlen(str_two))
+    end_pos = strlen(str_two);
 
   do {
 
     /* We are only comparing letters, numbers, and blanks, so skip any other characters. */
     if (options & DIR) {
-      while (!isalnum(*str_one) && !isblank(*str_one) && *str_one)
-        str_one++;
+      while (i < end_pos && !isalnum(str_one[i]) && !isblank(str_one[i]) && str_one[i])
+        i++;
 
-      while (!isalnum(*str_two) && !isblank(*str_two) && *str_two)
-        str_two++;
+      while (j < end_pos && !isalnum(str_two[j]) && !isblank(str_two[j]) && str_two[j])
+        j++;
     }
 
-    /* Compare, using the method specified in options. */
-    a = (options & FOLD) ? tolower(*str_one) : *str_one;
-    b = (options & FOLD) ? tolower(*str_two) : *str_two;
+    if (i < end_pos && j < end_pos) {
+      /* Compare, using the method specified in options. */
+      a = (options & FOLD) ? tolower(str_one[i]) : str_one[i];
+      b = (options & FOLD) ? tolower(str_two[j]) : str_two[j];
 
-    /* Check to see if the strings are exactly equal, to make sure we don't fall off the end! */
-    if ((a == b) && (*str_one == '\0'))
-      return 0;
+      /* Check to see if the strings are exactly equal, to make sure we don't fall off the end! */
+      if ((a == b) && (*str_one == '\0'))
+        return 0;
+    }
 
-    str_one++;
-    str_two++;
-  } while (a == b);
+    i++;
+    j++;
+  } while (a == b && i < end_pos && j < end_pos);
 
   return a - b;
 }
