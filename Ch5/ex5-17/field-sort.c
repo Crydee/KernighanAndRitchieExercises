@@ -199,4 +199,12 @@ int field_numcmp(char *num1, char *num2) {
   float v2 = atof(comp_key);
 
   /* compare the values and output as appropriate. */
+  /* We don't just return v1 - v2 as we need to return an int
+   * to keep the signature the same as numcmp. */
+  if (v1 < v2)
+    return -1;
+  else if (v1 > v2)
+    return 1;
+  else
+   return 0;
 }
